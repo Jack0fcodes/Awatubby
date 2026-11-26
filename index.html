@@ -86,20 +86,6 @@ footer{border-top:1px solid var(--line);padding:22px 24px;color:#9b8994;font-siz
 .about-sticker{min-height:210px;width:100%}
 .about-copy{max-width:none;margin:0}
 
-/* Local text editor controls — edits are saved in this browser only */
-.portfolio-editor{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:9999;display:flex;gap:8px;align-items:center;padding:9px;background:rgba(255,255,255,.96);border:1px solid #eee2e7;border-radius:999px;box-shadow:0 8px 28px rgba(100,70,85,.12);font-family:inherit;font-size:13px;font-weight:600;line-height:1.2}
-.portfolio-editor button{font:inherit;border:0;border-radius:999px;padding:11px 15px;cursor:pointer;color:#735965;background:#f7e6ed}
-.portfolio-editor button.editor-primary{background:#e8b8cc;color:#604552}
-.portfolio-editor .editor-status{font-size:11px;color:#9b8791;padding:0 6px;max-width:130px}
-body.text-edit-mode [data-local-editable="true"]{outline:1px dashed #d28eae;outline-offset:3px;cursor:text}
-body.text-edit-mode [data-local-editable="true"]:focus{outline:2px solid #c77da0;background:rgba(255,239,246,.5)}
-@media(max-width:540px){.portfolio-editor{right:10px;bottom:calc(10px + env(safe-area-inset-bottom));gap:5px;padding:7px}.portfolio-editor button{padding:10px 12px}.portfolio-editor .editor-status{max-width:85px}}
-
-.local-edit-text{white-space:inherit}
-body.text-edit-mode .local-edit-text[data-local-editable="true"]{outline:1px dashed #d28eae;outline-offset:2px;cursor:text}
-body.text-edit-mode .local-edit-text[data-local-editable="true"]:focus{outline:2px solid #c77da0;background:rgba(255,239,246,.5)}
-/* Fix hero heading text wrappers: keep ordinary lines dark and inline */
-.hero h1 .local-edit-text{display:inline!important;color:var(--ink)!important}
 .hero h1 .hero-highlight{color:#c88da8;display:block}
 .hero h1 .hero-highlight .local-edit-text{display:inline!important;color:inherit!important}
 .hero h1{line-height:1.02;margin:22px 0 18px}
@@ -193,7 +179,7 @@ document.getElementById('year').textContent=new Date().getFullYear();
 const greetingBadge=document.querySelector('.hero-greeting');
 const greetingText=document.querySelector('.greeting-text');
 window.setTimeout(()=>{
-  if(!greetingBadge||!greetingText||document.body.classList.contains('text-edit-mode')) return;
+  if(!greetingBadge||!greetingText) return;
   const before=greetingBadge.getBoundingClientRect().width;
   greetingBadge.style.transition='none';
   greetingBadge.style.width=before+'px';
@@ -221,102 +207,5 @@ const filters=document.querySelectorAll('.filter'),projects=document.querySelect
 filters.forEach(button=>button.addEventListener('click',()=>{filters.forEach(b=>b.classList.remove('active'));button.classList.add('active');const value=button.dataset.filter;projects.forEach(card=>card.hidden=value!=='all'&&card.dataset.category!==value)}));
 </script>
 
-<div class="portfolio-editor" id="portfolioEditor" aria-label="Portfolio text editor">
-<button type="button" id="editTextBtn" class="editor-primary">Edit text</button>
-<button type="button" id="saveTextBtn" hidden>Save</button>
-<button type="button" id="finishTextBtn" hidden>Finish</button>
-<button type="button" id="resetTextBtn" hidden>Reset</button>
-<span class="editor-status" id="editorStatus">Edit wording</span>
-</div>
-<script>
-(function(){
-  const storageKey='awatubby-local-text-v3';
-  const editor=document.getElementById('portfolioEditor');
-  const editBtn=document.getElementById('editTextBtn');
-  const saveBtn=document.getElementById('saveTextBtn');
-  const finishBtn=document.getElementById('finishTextBtn');
-  const resetBtn=document.getElementById('resetTextBtn');
-  const status=document.getElementById('editorStatus');
-  let targets=[];
-  function excluded(node){
-    const parent=node.parentElement;
-    return !parent || !!parent.closest('#portfolioEditor,script,style,noscript,svg,iframe,canvas,video,audio,source,template,[aria-hidden="true"],[hidden],input,textarea,select');
-  }
-  function collect(){
-    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
-    const nodes=[];
-    let node;
-    while((node=walker.nextNode())){
-      if(!node.nodeValue.trim()||excluded(node)) continue;
-      nodes.push(node);
-    }
-    nodes.forEach((textNode)=>{
-      const span=document.createElement('span');
-      span.className='local-edit-text';
-      span.textContent=textNode.nodeValue;
-      textNode.parentNode.replaceChild(span,textNode);
-    });
-    targets=Array.from(document.querySelectorAll('.local-edit-text')).filter(el=>!el.closest('#portfolioEditor'));
-    targets.forEach((el,i)=>{el.dataset.localEditId=String(i);});
-  }
-  function restore(){
-    try{
-      const saved=JSON.parse(localStorage.getItem(storageKey)||'{}');
-      collect();
-      targets.forEach(el=>{
-        if(el.closest('#about-description')){
-          el.textContent='I’m a creative person who loves turning ideas into thoughtful digital experiences. I enjoy making cute things, exploring new ideas, and adding a little personality to everything I create.';
-          return;
-        }
-        const id=el.dataset.localEditId;
-        if(Object.prototype.hasOwnProperty.call(saved,id)) el.textContent=saved[id];
-      });
-    }catch(e){status.textContent='Browser storage unavailable';}
-  }
-  const aboutCopy='I’m a creative person who loves turning ideas into thoughtful digital experiences. I enjoy making cute things, exploring new ideas, and adding a little personality to everything I create.';
-  const aboutParagraph=document.getElementById('about-description');
-  if(aboutParagraph){
-    const aboutSpan=aboutParagraph.querySelector('.local-edit-text');
-    if(aboutSpan) aboutSpan.textContent=aboutCopy;
-    else aboutParagraph.textContent=aboutCopy;
-  }
-  function snapshot(){
-    const saved={};
-    targets.forEach(el=>saved[el.dataset.localEditId]=el.textContent);
-    return saved;
-  }
-  function save(){
-    try{
-      localStorage.setItem(storageKey,JSON.stringify(snapshot()));
-      status.textContent='Saved on this device';
-    }catch(e){status.textContent='Could not save in browser';}
-  }
-  function start(){
-    document.body.classList.add('text-edit-mode');
-    targets.forEach(el=>{el.contentEditable='true';el.spellcheck=true;el.setAttribute('data-local-editable','true');});
-    editBtn.hidden=true;saveBtn.hidden=false;finishBtn.hidden=false;resetBtn.hidden=false;
-    status.textContent='Tap any text to edit';
-  }
-  function finish(){
-    targets.forEach(el=>{el.contentEditable='false';el.removeAttribute('data-local-editable');});
-    document.body.classList.remove('text-edit-mode');
-    editBtn.hidden=false;saveBtn.hidden=true;finishBtn.hidden=true;resetBtn.hidden=true;
-    status.textContent='Edit wording';
-  }
-  document.addEventListener('click',function(event){
-    if(!document.body.classList.contains('text-edit-mode')) return;
-    const editable=event.target.closest('[data-local-editable="true"]');
-    if(editable && editable.closest('a')) event.preventDefault();
-  },true);
-  editBtn.addEventListener('click',start);
-  saveBtn.addEventListener('click',save);
-  finishBtn.addEventListener('click',()=>{save();finish();});
-  resetBtn.addEventListener('click',()=>{
-    if(!confirm('Reset saved wording on this device?')) return;
-    localStorage.removeItem(storageKey);
-    location.reload();
-  });
-  restore();
-})();</script>
 </body>
 </html>
