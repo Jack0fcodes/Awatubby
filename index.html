@@ -98,7 +98,7 @@ body.text-edit-mode [data-local-editable="true"]:focus{outline:2px solid #c77da0
 .local-edit-text{white-space:inherit}
 body.text-edit-mode .local-edit-text[data-local-editable="true"]{outline:1px dashed #d28eae;outline-offset:2px;cursor:text}
 body.text-edit-mode .local-edit-text[data-local-editable="true"]:focus{outline:2px solid #c77da0;background:rgba(255,239,246,.5)}
-</style>
+/* Fix hero heading after editable text wraps text nodes in spans */\n.hero h1 .local-edit-text{display:inline!important;color:inherit!important}\n.hero h1 .hero-highlight{color:#c88da8;display:inline}\n.hero h1{line-height:1.02;margin:22px 0 18px}\n</style>
 </head>
 <body>
 <div class="top-note">A little collection of things made with care ✿</div>
@@ -109,7 +109,7 @@ body.text-edit-mode .local-edit-text[data-local-editable="true"]:focus{outline:2
 <main>
 <section class="hero" id="home">
 <div><span class="eyebrow"><i></i> Hello, I'm a creative maker</span>
-<h1>A little world<br>made of <span>big ideas.</span></h1>
+<h1>A little world<br>made of <span class="hero-highlight">big ideas.</span></h1>
 <p>Welcome to my cozy corner of the internet — a tiny shelf of projects, experiments, and thoughtful things I’ve made along the way.</p>
 <div class="actions"></div></div>
 <div class="hero-art" aria-label="Playful plush-inspired decorative illustration">
