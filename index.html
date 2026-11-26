@@ -139,6 +139,22 @@ header .brand>.brand-mark{display:block!important;width:58px!important;height:58
 .hero{padding-top:96px!important;padding-bottom:18px!important}
 .work{padding-top:10px!important}
 @media(max-width:540px){.hero{padding-top:62px!important;padding-bottom:22px!important}.work{padding-top:8px!important}}
+
+/* Correctly center the gallery in mobile and portrait layouts */
+@media(max-width:800px){
+  .work>.wrap{width:100%;max-width:1160px;box-sizing:border-box;margin-inline:auto;padding-inline:24px}
+  .work .section-head{width:100%;display:flex;flex-direction:column;align-items:center!important;justify-content:center!important;text-align:center!important}
+  .work .section-head>div{width:100%;text-align:center}
+  .work .filters{width:100%;box-sizing:border-box;justify-content:center;flex-wrap:wrap;margin-inline:auto}
+  .work .grid{width:100%;max-width:100%;box-sizing:border-box;margin-inline:auto;grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:540px){
+  .work>.wrap{padding-inline:17px}
+  .work .section-head{align-items:center!important;text-align:center!important}
+  .work .filters{justify-content:center;gap:4px}
+  .work .filter{padding-inline:10px}
+  .work .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+}
 </style>
 </head>
 <body>
@@ -225,19 +241,3 @@ filters.forEach(button=>button.addEventListener('click',()=>{filters.forEach(b=>
 
 </body>
 </html>
-
-/* Center the gallery consistently on narrow and portrait screens */
-@media(max-width:800px){
-  .work>.wrap{width:100%;max-width:100%;margin-inline:auto;padding-inline:17px}
-  .work .section-head{width:100%;align-items:center!important;justify-content:center!important;text-align:center!important}
-  .work .section-head>div{width:100%;text-align:center}
-  .work .filters{width:100%;justify-content:center;overflow:visible;flex-wrap:wrap;margin-inline:auto}
-  .work .grid{width:100%;max-width:100%;margin-inline:auto}
-}
-@media(max-width:540px){
-  .work>.wrap{padding-inline:14px}
-  .work .section-head{align-items:center!important}
-  .work .filters{justify-content:center;gap:2px}
-  .work .filter{padding-inline:9px}
-  .work .grid{grid-template-columns:repeat(2,minmax(0,1fr));}
-}
