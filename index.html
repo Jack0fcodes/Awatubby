@@ -157,9 +157,9 @@ header .brand>.brand-mark{display:block!important;width:58px!important;height:58
 }
 
 /* Scroll-triggered logo swap: keep the normal mark round, but let the full cat hang outside it */
-.brand-mark{position:relative!important;overflow:visible!important;transition:width .35s ease,height .35s ease!important}
-.brand-mark .logo-normal{opacity:1;transition:opacity .28s ease!important}
-.brand-mark .brand-hanging{position:absolute!important;top:0!important;left:50%!important;inset-inline:auto!important;transform:translateX(-50%) translateY(-10px)!important;width:94px!important;height:174px!important;min-width:0!important;max-width:none!important;min-height:0!important;max-height:none!important;object-fit:contain!important;object-position:top center!important;border-radius:0!important;clip-path:none!important;opacity:0!important;pointer-events:none!important;transition:opacity .35s ease,transform .45s cubic-bezier(.2,.7,.25,1)!important}
+.brand-mark{position:relative!important;overflow:visible!important;transition:none!important}
+.brand-mark .logo-normal{opacity:1;transition:none!important}
+.brand-mark .brand-hanging{position:absolute!important;top:0!important;left:50%!important;inset-inline:auto!important;transform:translateX(-50%) translateY(-4px)!important;width:94px!important;height:174px!important;min-width:0!important;max-width:none!important;min-height:0!important;max-height:none!important;object-fit:contain!important;object-position:top center!important;border-radius:0!important;clip-path:none!important;opacity:0!important;pointer-events:none!important;transition:transform .16s cubic-bezier(.2,.7,.25,1)!important}
 header .brand-mark.is-hanging{overflow:visible!important;clip-path:none!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
 header .brand-mark.is-hanging .logo-normal{opacity:0!important}
 header .brand-mark.is-hanging .brand-hanging{opacity:1!important;transform:translateX(-50%) translateY(0)!important;width:94px!important;height:174px!important;clip-path:none!important;border-radius:0!important;object-fit:contain!important;object-position:top center!important}
