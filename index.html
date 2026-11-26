@@ -48,6 +48,11 @@ footer{border-top:1px solid var(--line);padding:22px 24px;color:#9b8994;font-siz
 @media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cover-art{font-size:clamp(58px,12vw,100px)}}
 @media(max-width:540px){.work{padding-top:25px}.filters{gap:0;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;margin:17px 0 22px}.filter{white-space:nowrap;padding:9px 10px;font-size:11px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.project-info{padding:10px 10px 12px}.project h3{font-size:13px}.project p{font-size:10px}.cover-art{font-size:clamp(50px,13vw,78px)}.card-label{top:8px;left:8px;font-size:8px;padding:4px 6px}.arrow{width:20px;height:20px}}
 
+
+/* Minimal gallery: artwork-only color tiles */
+.project-info,.card-label,.cover-art{display:none!important}
+.project{padding:0}
+.cover{aspect-ratio:1/1;height:auto}
 </style>
 </head>
 <body>
