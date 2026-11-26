@@ -195,16 +195,27 @@ const greetingText=document.querySelector('.greeting-text');
 window.setTimeout(()=>{
   if(!greetingBadge||!greetingText||document.body.classList.contains('text-edit-mode')) return;
   const before=greetingBadge.getBoundingClientRect().width;
-  greetingBadge.style.width=before+'px';
   greetingBadge.style.transition='none';
+  greetingBadge.style.width=before+'px';
+  greetingText.style.transition='none';
   greetingText.textContent='Helloooo!!';
+  greetingText.style.clipPath='inset(0 100% 0 0)';
   greetingBadge.style.width='max-content';
   const after=greetingBadge.getBoundingClientRect().width;
   greetingBadge.style.width=before+'px';
   void greetingBadge.offsetWidth;
-  greetingBadge.style.transition='width 480ms ease';
-  requestAnimationFrame(()=>greetingBadge.style.width=after+'px');
-  window.setTimeout(()=>{greetingBadge.style.width='';},520);
+  greetingBadge.style.transition='width 720ms cubic-bezier(.22,.7,.2,1)';
+  greetingText.style.transition='clip-path 760ms cubic-bezier(.22,.7,.2,1)';
+  requestAnimationFrame(()=>{
+    greetingBadge.style.width=after+'px';
+    greetingText.style.clipPath='inset(0 0 0 0)';
+  });
+  window.setTimeout(()=>{
+    greetingBadge.style.width='';
+    greetingText.style.clipPath='';
+    greetingText.style.transition='';
+    greetingBadge.style.transition='';
+  },800);
 },950);
 const filters=document.querySelectorAll('.filter'),projects=document.querySelectorAll('.project');
 filters.forEach(button=>button.addEventListener('click',()=>{filters.forEach(b=>b.classList.remove('active'));button.classList.add('active');const value=button.dataset.filter;projects.forEach(card=>card.hidden=value!=='all'&&card.dataset.category!==value)}));
