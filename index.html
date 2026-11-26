@@ -98,7 +98,12 @@ body.text-edit-mode [data-local-editable="true"]:focus{outline:2px solid #c77da0
 .local-edit-text{white-space:inherit}
 body.text-edit-mode .local-edit-text[data-local-editable="true"]{outline:1px dashed #d28eae;outline-offset:2px;cursor:text}
 body.text-edit-mode .local-edit-text[data-local-editable="true"]:focus{outline:2px solid #c77da0;background:rgba(255,239,246,.5)}
-/* Fix hero heading after editable text wraps text nodes in spans */\n.hero h1 .local-edit-text{display:inline!important;color:inherit!important}\n.hero h1 .hero-highlight{color:#c88da8;display:inline}\n.hero h1{line-height:1.02;margin:22px 0 18px}\n</style>
+/* Fix hero heading text wrappers: keep ordinary lines dark and inline */
+.hero h1 .local-edit-text{display:inline!important;color:var(--ink)!important}
+.hero h1 .hero-highlight{color:#c88da8;display:block}
+.hero h1 .hero-highlight .local-edit-text{display:inline!important;color:inherit!important}
+.hero h1{line-height:1.02;margin:22px 0 18px}
+</style>
 </head>
 <body>
 <div class="top-note">A little collection of things made with care ✿</div>
