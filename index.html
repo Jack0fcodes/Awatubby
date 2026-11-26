@@ -63,6 +63,13 @@ footer{border-top:1px solid var(--line);padding:22px 24px;color:#9b8994;font-siz
 .instagram-project .insta-cover{aspect-ratio:1/1;height:auto;background:#fff;overflow:hidden;position:relative}
 .instagram-project iframe{position:absolute;top:-18%;left:0;width:100%;height:128%;border:0;background:#fff}
 .instagram-project .insta-open{position:absolute;bottom:10px;left:10px;right:10px;z-index:2;text-align:center;padding:9px 12px;border-radius:999px;background:rgba(255,255,255,.94);border:1px solid #eee;color:#72566a;font-size:11px;font-weight:800;text-decoration:none}
+
+.social-card{padding:48px 24px}
+.social-links{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:28px;flex-wrap:wrap}
+.social-icon{width:54px;height:54px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:#fff;color:#856c7a;box-shadow:0 4px 0 rgba(121,87,105,.08);transition:transform .18s,background .18s,color .18s}
+.social-icon svg{width:23px;height:23px}
+.social-icon:hover{transform:translateY(-3px);background:#f4d6e2;color:#69495c}
+@media(max-width:540px){.social-links{gap:10px}.social-icon{width:48px;height:48px}}
 </style>
 </head>
 <body>
@@ -107,7 +114,13 @@ footer{border-top:1px solid var(--line);padding:22px 24px;color:#9b8994;font-siz
 <div class="about-sticker"><div class="emoji">🌸</div><strong>collecting ideas & making things</strong><small>one little project at a time</small></div>
 <div class="about-copy"><span class="eyebrow"><i></i> A little about me</span><h2>Curious heart.<br>Creative hands.</h2><p>I'm a creative person who loves turning ideas into thoughtful digital experiences. I enjoy experimenting, learning new things, and adding a little warmth to the things I make.</p><p>This portfolio is my growing collection — a place to share what I'm working on and what inspires me.</p><a class="btn btn-soft" href="#contact">Let's connect ↗</a></div>
 </div></div></section>
-<section class="contact" id="contact"><div class="wrap"><div class="contact-card"><span class="eyebrow"><i></i> Have a little idea?</span><h2>Let's make something lovely.</h2><p>Have a project in mind, want to say hi, or just share something cute? My inbox is open.</p><a class="btn btn-primary" href="mailto:hello@example.com">Send me a note ♡</a></div></div></section>
+<section class="contact" id="contact"><div class="wrap"><div class="contact-card social-card"><span class="eyebrow"><i></i> Find me around the internet</span><h2>Let's stay connected.</h2><p>A little hello, a new project, or just come say hi ♡</p><div class="social-links" aria-label="Social media links">
+<a class="social-icon" href="https://www.instagram.com/awatubby/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg></a>
+<a class="social-icon" href="https://x.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter" title="X / Twitter"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.7 5.6 22H2.4l7.3-8.4L1.9 2h6.5l4.5 6.7L18.9 2Zm-1.1 18h1.7L7.3 3.9H5.5L17.8 20Z"/></svg></a>
+<a class="social-icon" href="https://www.facebook.com/yourpage" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.1H7.3V13h2.8v8h3.4Z"/></svg></a>
+<a class="social-icon" href="https://www.tiktok.com/@yourusername" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.6 6.7a6.2 6.2 0 0 1-3.8-1.3v8.1a5.8 5.8 0 1 1-5-5.7v3.3a2.5 2.5 0 1 0 1.8 2.4V2h3.4c.2 2.1 1.6 3.8 3.6 4.2v.5Z"/></svg></a>
+<a class="social-icon" href="https://github.com/Jack0fcodes" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .9a11.1 11.1 0 0 0-3.5 21.6c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.4-4-1.4-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.4-1.1.7-1.4-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.3 18 4.6 18 4.6c.6 1.6.2 2.9.1 3.2.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.3.8 1 .8 2v3c0 .3.2.7.8.6A11.1 11.1 0 0 0 12 .9Z"/></svg></a>
+</div></div></div></section>
 </main>
 <footer><div class="footer-inner"><span>© <span id="year"></span> <b>awatubby</b> · made with a little extra care</span><span>Back to top <a href="#home" style="color:#b77e99;font-weight:900">↑</a></span></div></footer>
 <script>
