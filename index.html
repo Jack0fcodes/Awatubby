@@ -155,12 +155,20 @@ header .brand>.brand-mark{display:block!important;width:58px!important;height:58
   .work .filter{padding-inline:10px}
   .work .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 }
+
+/* Scroll-triggered logo swap: normal logo at top, hanging cat after scrolling */
+.brand-mark{position:relative!important;overflow:visible!important;transition:width .35s ease,height .35s ease!important}
+.brand-mark .logo-normal{opacity:1;transition:opacity .28s ease!important}
+.brand-mark .brand-hanging{position:absolute!important;top:8px!important;left:50%!important;inset-inline:auto!important;transform:translateX(-50%) translateY(-8px)!important;width:94px!important;height:174px!important;min-width:0!important;max-width:none!important;min-height:0!important;max-height:none!important;object-fit:contain!important;object-position:top center!important;border-radius:0!important;clip-path:none!important;opacity:0!important;pointer-events:none!important;transition:opacity .35s ease,transform .45s cubic-bezier(.2,.7,.25,1)!important}
+header .brand-mark.is-hanging .logo-normal{opacity:0!important}
+header .brand-mark.is-hanging .brand-hanging{opacity:1!important;transform:translateX(-50%) translateY(0)!important}
+@media(max-width:540px){.brand-mark .brand-hanging{width:78px!important;height:145px!important;top:7px!important}}
 </style>
 </head>
 <body>
 <div class="top-note">A little collection of things made with care ✿</div>
 <header><nav class="nav" aria-label="Main navigation">
-<a class="brand" href="#home"><span class="brand-mark"><img src="assets/logo/logo.gif" alt="" aria-hidden="true"></span> awatubby</a>
+<a class="brand" href="#home"><span class="brand-mark"><img class="logo-normal" src="assets/logo/logo.gif" alt="" aria-hidden="true"><img class="brand-hanging" src="assets/logo/hanging-cat.gif" alt="" aria-hidden="true"></span> awatubby</a>
 <div class="nav-links"><a href="#work">My work</a><a href="#about">About</a><a class="nav-cta" href="#contact">Social ↗</a></div>
 </nav></header>
 <main>
@@ -237,6 +245,17 @@ window.setTimeout(()=>{
 },950);
 const filters=document.querySelectorAll('.filter'),projects=document.querySelectorAll('.project');
 filters.forEach(button=>button.addEventListener('click',()=>{filters.forEach(b=>b.classList.remove('active'));button.classList.add('active');const value=button.dataset.filter;projects.forEach(card=>card.hidden=value!=='all'&&card.dataset.category!==value)}));
+
+// Swap the header logo to the hanging cat while scrolling down.
+const brandMark=document.querySelector('header .brand-mark');
+const hangingLogo=brandMark?.querySelector('.brand-hanging');
+if(brandMark&&hangingLogo){
+  const setLogoState=()=>brandMark.classList.toggle('is-hanging',window.scrollY>90);
+  if(hangingLogo.complete&&hangingLogo.naturalWidth===0) hangingLogo.style.display='none';
+  hangingLogo.addEventListener('error',()=>{hangingLogo.style.display='none';brandMark.classList.remove('is-hanging')},{once:true});
+  window.addEventListener('scroll',setLogoState,{passive:true});
+  setLogoState();
+}
 </script>
 
 </body>
