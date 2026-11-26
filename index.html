@@ -123,7 +123,13 @@ header .brand>.brand-mark{display:block!important;width:58px!important;height:58
 .greeting-text{display:inline-block;animation:none!important;transform:none!important;opacity:1!important}
 @keyframes face-glide-in{from{opacity:0;transform:translateX(-.48em)}to{opacity:1;transform:translateX(0)}}
 @media(max-width:540px){.hero h1 .hero-name{font-size:clamp(34px,8.4vw,48px);letter-spacing:-.065em}}
-@media(prefers-reduced-motion:reduce){.hero h1 .hero-face{animation:none!important;opacity:1!important;transform:none!important}.hero-greeting{transition:none!important}}</style>
+@media(prefers-reduced-motion:reduce){.hero h1 .hero-face{animation:none!important;opacity:1!important;transform:none!important}.hero-greeting{transition:none!important}}
+/* Give the hero and gallery a more relaxed vertical rhythm */
+.hero{padding-bottom:84px}
+.work{padding-top:52px}
+.filters{margin-bottom:38px}
+@media(max-width:540px){.hero{padding-bottom:58px}.work{padding-top:34px}.filters{margin-bottom:26px}}
+</style>
 </head>
 <body>
 <div class="top-note">A little collection of things made with care ✿</div>
