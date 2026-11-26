@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#fff7f4">
 <meta name="description" content="A cozy little portfolio of projects, experiments, and things made with care.">
 <title>Awatubby — A little portfolio</title>
@@ -87,13 +87,13 @@ footer{border-top:1px solid var(--line);padding:22px 24px;color:#9b8994;font-siz
 .about-copy{max-width:none;margin:0}
 
 /* Local text editor controls — edits are saved in this browser only */
-.portfolio-editor{position:fixed;right:18px;bottom:18px;z-index:9999;display:flex;gap:8px;align-items:center;padding:9px;background:rgba(255,255,255,.96);border:1px solid #eee2e7;border-radius:999px;box-shadow:0 8px 28px rgba(100,70,85,.12);font-family:inherit;font-size:13px;font-weight:600;line-height:1.2}
+.portfolio-editor{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:9999;display:flex;gap:8px;align-items:center;padding:9px;background:rgba(255,255,255,.96);border:1px solid #eee2e7;border-radius:999px;box-shadow:0 8px 28px rgba(100,70,85,.12);font-family:inherit;font-size:13px;font-weight:600;line-height:1.2}
 .portfolio-editor button{font:inherit;border:0;border-radius:999px;padding:11px 15px;cursor:pointer;color:#735965;background:#f7e6ed}
 .portfolio-editor button.editor-primary{background:#e8b8cc;color:#604552}
 .portfolio-editor .editor-status{font-size:11px;color:#9b8791;padding:0 6px;max-width:130px}
 body.text-edit-mode [data-local-editable="true"]{outline:1px dashed #d28eae;outline-offset:3px;cursor:text}
 body.text-edit-mode [data-local-editable="true"]:focus{outline:2px solid #c77da0;background:rgba(255,239,246,.5)}
-@media(max-width:540px){.portfolio-editor{right:10px;bottom:10px;gap:5px;padding:7px}.portfolio-editor button{padding:10px 12px}.portfolio-editor .editor-status{max-width:85px}}
+@media(max-width:540px){.portfolio-editor{right:10px;bottom:calc(10px + env(safe-area-inset-bottom));gap:5px;padding:7px}.portfolio-editor button{padding:10px 12px}.portfolio-editor .editor-status{max-width:85px}}
 
 .local-edit-text{white-space:inherit}
 body.text-edit-mode .local-edit-text[data-local-editable="true"]{outline:1px dashed #d28eae;outline-offset:2px;cursor:text}
@@ -169,7 +169,7 @@ filters.forEach(button=>button.addEventListener('click',()=>{filters.forEach(b=>
 </div>
 <script>
 (function(){
-  const storageKey='awatubby-local-text-v2';
+  const storageKey='awatubby-local-text-v3';
   const editor=document.getElementById('portfolioEditor');
   const editBtn=document.getElementById('editTextBtn');
   const saveBtn=document.getElementById('saveTextBtn');
