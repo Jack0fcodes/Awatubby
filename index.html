@@ -81,9 +81,10 @@ footer{border-top:1px solid var(--line);padding:22px 24px;color:#9b8994;font-siz
 .social-label{margin:0 0 20px;text-align:center;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#a58a98}
 
 /* Simplify About section after removing the sticker */
-.about-box{grid-template-columns:1fr}
+.about-box{grid-template-columns:.8fr 1.2fr}
 .about-box:after{content:none}
-.about-copy{max-width:760px;margin:0 auto}
+.about-sticker{min-height:210px;width:100%}
+.about-copy{max-width:none;margin:0}
 </style>
 </head>
 <body>
@@ -125,7 +126,7 @@ footer{border-top:1px solid var(--line);padding:22px 24px;color:#9b8994;font-siz
 </div>
 </div></section>
 <section class="about" id="about"><div class="wrap"><div class="about-box">
-
+<div class="about-sticker" aria-hidden="true"></div>
 <div class="about-copy"><span class="eyebrow"><i></i> A little about me</span><h2>Curious heart.<br>Creative hands.</h2><p>I'm a creative person who loves turning ideas into thoughtful digital experiences. I enjoy experimenting, learning new things, and adding a little warmth to the things I make.</p><p>This portfolio is my growing collection — a place to share what I'm working on and what inspires me.</p><a class="btn btn-soft" href="#contact">Let's connect ↗</a></div>
 </div></div></section>
 <section class="contact" id="contact"><div class="wrap"><div class="contact-card social-card"><p class="social-label">Socials</p><div class="social-links" aria-label="Social media links">
