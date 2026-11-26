@@ -273,6 +273,13 @@ filters.forEach(button=>button.addEventListener('click',()=>{filters.forEach(b=>
       });
     }catch(e){status.textContent='Browser storage unavailable';}
   }
+  const aboutCopy='I’m a creative person who loves turning ideas into thoughtful digital experiences. I enjoy making cute things, exploring new ideas, and adding a little personality to everything I create.';
+  const aboutParagraph=document.getElementById('about-description');
+  if(aboutParagraph){
+    const aboutSpan=aboutParagraph.querySelector('.local-edit-text');
+    if(aboutSpan) aboutSpan.textContent=aboutCopy;
+    else aboutParagraph.textContent=aboutCopy;
+  }
   function snapshot(){
     const saved={};
     targets.forEach(el=>saved[el.dataset.localEditId]=el.textContent);
