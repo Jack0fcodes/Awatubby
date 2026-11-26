@@ -117,6 +117,13 @@ body.text-edit-mode .local-edit-text[data-local-editable="true"]:focus{outline:2
   .nav-links{font-size:15px;gap:14px}
   .nav-cta{padding:12px 17px}
 }
+
+/* Use the uploaded animated plush artwork while keeping both floating text bubbles */
+.hero-gif{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);width:min(92%,390px);height:auto;display:block;z-index:1;object-fit:contain}
+.hero-art .float-tag{z-index:3}
+.hero-art .spark{z-index:2}
+@media(max-width:800px){.hero-gif{width:min(86%,340px);bottom:30px}}
+@media(max-width:540px){.hero-gif{width:min(84%,290px);bottom:28px}}
 </style>
 </head>
 <body>
@@ -134,7 +141,7 @@ body.text-edit-mode .local-edit-text[data-local-editable="true"]:focus{outline:2
 <div class="hero-art" aria-label="Playful plush-inspired decorative illustration">
 <div class="spark a">✦</div><div class="spark b">✿</div>
 <div class="float-tag tag-one">made with ♡</div><div class="float-tag tag-two">little ideas, lots of love</div>
-<div class="toy big"><span class="face">•ᴗ•</span></div><div class="toy small"><span class="face">˶ᵔ ᵕ ᵔ˶</span></div><div class="shelf"></div>
+<img class="hero-gif" src="assets/plush-collection.gif" alt="Animated display box of colorful plush cats">
 </div>
 </section>
 <section class="work" id="work"><div class="wrap">
