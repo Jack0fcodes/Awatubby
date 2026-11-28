@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#fff7f4"><title>Awatubby Studio — Gallery Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--cream:#fff8f3;--paper:#fffdfb;--ink:#51434b;--muted:#907f89;--pink:#f4c9d7;--line:#f0e4e7;--rose:#dba0b7}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:ui-rounded,"SF Pro Rounded",system-ui,-apple-system,sans-serif;line-height:1.5}button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:14px;padding:10px 15px;background:#f3e4ea;color:#6a4f5c;font-weight:750}button.primary{background:#e8b7c9;box-shadow:0 3px 0 #d59aaf}button.danger{background:#f7e2e0;color:#9a4c4c}button:disabled{opacity:.5;cursor:wait}a{color:#a36e87}.shell{max-width:1000px;margin:auto;padding:24px 18px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.brand{font-size:24px;font-weight:950;letter-spacing:-.05em}.brand small{display:block;font-size:12px;font-weight:600;letter-spacing:0;color:var(--muted)}.panel{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 8px 26px #7957690a;margin-bottom:18px}.login{max-width:460px;margin:9vh auto}.login h1{margin:0 0 8px;font-size:32px;letter-spacing:-.05em}.muted{color:var(--muted);font-size:14px}.status{padding:11px 14px;border-radius:13px;background:#f6edf1;color:#806574;font-size:13px;margin:12px 0}.status.error{background:#f9e6e3;color:#934f4b}.status.good{background:#e8f3ea;color:#477b58}.field{display:grid;gap:6px;margin:14px 0}.field label{font-size:13px;font-weight:800}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);background:white;border-radius:12px;padding:12px;color:var(--ink);outline-color:#dba0b7}.field textarea{min-height:76px;resize:vertical}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.row .small{flex:0 0 auto}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.section-title h2{margin:0;font-size:22px;letter-spacing:-.04em}.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.item{display:grid;grid-template-columns:88px minmax(0,1fr);gap:14px;padding:14px 0;border-top:1px solid var(--line);align-items:start}.thumb{width:88px;height:88px;border-radius:15px;object-fit:cover;background:#f2e6eb}.item h3{margin:0;font-size:16px;overflow-wrap:anywhere}.item p{margin:5px 0;color:var(--muted);font-size:13px;overflow-wrap:anywhere}.pill{display:inline-block;font-size:11px;font-weight:800;border-radius:999px;padding:4px 9px;background:#f3e9ef;color:#8a6b7b;margin:5px 5px 0 0}.item-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.item-actions button{padding:7px 10px;font-size:12px}.empty{padding:24px;text-align:center;color:var(--muted)}@media(max-width:650px){.shell{padding:16px 12px 40px}.panel{padding:17px;border-radius:19px}.upload-grid{grid-template-columns:1fr}.item{grid-template-columns:68px minmax(0,1fr);gap:11px}.thumb{width:68px;height:68px}.top{align-items:flex-start}.brand{font-size:21px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="top"><div class="brand">awatubby <small>Studio · Gallery manager</small></div><a href="./">← View portfolio</a></header>
+<section id="login-panel" class="panel login">
+<h1>Welcome, artist ♡</h1><p class="muted">Sign in to upload artwork and prepare your gallery.</p>
+<form id="login-form"><div class="field"><label for="email">Admin email</label><input id="email" type="email" autocomplete="email" required placeholder="you@example.com"></div><button class="primary" id="login-button" type="submit">Send sign-in link</button></form>
+<div id="login-status" class="status" role="status">A sign-in link will be sent to your email.</div>
+</section>
+<section id="admin-panel" hidden>
+<div class="panel"><div class="section-title"><h2>Your gallery</h2><button id="signout" class="small">Sign out</button></div><p class="muted">Upload artwork as a draft, preview it, then publish when you're ready. Published artwork appears on the portfolio.</p><div id="admin-status" class="status" role="status">Checking access…</div></div>
+<div class="panel">
+<div class="section-title"><h2 id="form-title">Add artwork</h2></div>
+<form id="art-form">
+<input id="item-id" type="hidden">
+<div class="field"><label for="art-file">Artwork file (image, GIF, or MP4)</label><input id="art-file" type="file" accept="image/jpeg,image/png,image/webp,image/avif,image/gif,video/mp4"></div>
+<div class="upload-grid">
+<div class="field"><label for="art-title">Title</label><input id="art-title" maxlength="120" required placeholder="Little artwork title"></div>
+<div class="field"><label for="art-category">Gallery category</label><select id="art-category"><option value="web">Stickers</option><option value="design">Emotes</option><option value="play">Just for fun</option></select></div>
+</div>
+<div class="field"><label for="art-caption">Caption (optional)</label><textarea id="art-caption" maxlength="500" placeholder="A short note about this piece"></textarea></div>
+<div class="row"><button class="primary" id="save-draft" type="submit">Save as draft</button><button type="button" id="cancel-edit">Cancel edit</button></div>
+</form></div>
+<div class="panel"><div class="section-title"><h2>Artwork list</h2><button id="refresh" class="small">Refresh</button></div><div id="items"><div class="empty">Loading artwork…</div></div></div>
+</section>
+</div>
+<script>
+(() => {
+ const SUPABASE_URL='https://ytwskhihsglneebiqnql.supabase.co';
+ const SUPABASE_KEY='sb_publishable_2cFsK5dNf9WNBAuPxWpvfw_UuFRjQj-';
+ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+ const $=id=>document.getElementById(id);
+ const loginPanel=$('login-panel'),adminPanel=$('admin-panel'),loginStatus=$('login-status'),adminStatus=$('admin-status');
+ let items=[],adminEmail='';
+ function message(el,text,type=''){el.textContent=text;el.className='status'+(type?' '+type:'')}
+ function safeText(el,text){el.textContent=text||''}
+ function urlFor(path){return client.storage.from('portfolio-artwork').getPublicUrl(path).data.publicUrl}
+ function mediaPreview(item){
+   const url=urlFor(item.image_path);
+   if(item.media_type==='video'){const v=document.createElement('video');v.src=url;v.muted=true;v.loop=true;v.autoplay=true;v.playsInline=true;v.className='thumb';return v}
+   const img=document.createElement('img');img.src=url;img.alt='';img.className='thumb';return img
+ }
+ async function checkAdmin(session){
+   loginPanel.hidden=true;adminPanel.hidden=false;
+   const email=session.user.email||'';
+   const {data,error}=await client.from('gallery_admins').select('email').eq('email',email.toLowerCase()).maybeSingle();
+   if(error||!data){adminPanel.hidden=true;loginPanel.hidden=false;message(loginStatus,error?'Could not verify admin access.':'This email is not on the gallery admin list. Ask the site owner to add it.','error');await client.auth.signOut();return}
+   adminEmail=email;message(adminStatus,'Signed in as '+email,'good');await loadItems();
+ }
+ async function loadItems(){
+   message(adminStatus,'Loading your gallery…');
+   const {data,error}=await client.from('gallery_items').select('*').order('position',{ascending:true}).order('created_at',{ascending:false});
+   if(error){message(adminStatus,error.message,'error');return}
+   items=data||[];renderItems();message(adminStatus,'Ready · '+items.length+' artwork item(s)','good');
+ }
+ function renderItems(){
+   const host=$('items');host.replaceChildren();
+   if(!items.length){const e=document.createElement('div');e.className='empty';e.textContent='No artwork yet. Upload your first piece above!';host.append(e);return}
+   items.forEach((item,index)=>{
+     const row=document.createElement('article');row.className='item';row.append(mediaPreview(item));
+     const body=document.createElement('div');const title=document.createElement('h3');safeText(title,item.title);body.append(title);
+     const p=document.createElement('p');safeText(p,item.caption);body.append(p);
+     const state=document.createElement('span');state.className='pill';state.textContent=item.published?'Published':'Draft';body.append(state);
+     const cat=document.createElement('span');cat.className='pill';cat.textContent=({web:'Stickers',design:'Emotes',play:'Just for fun'})[item.category]||item.category;body.append(cat);
+     const actions=document.createElement('div');actions.className='item-actions';
+     const edit=button('Edit',()=>editItem(item));actions.append(edit);
+     const toggle=button(item.published?'Unpublish':'Publish',()=>togglePublish(item));actions.append(toggle);
+     const up=button('↑',()=>move(index,-1));up.disabled=index===0;actions.append(up);
+     const down=button('↓',()=>move(index,1));down.disabled=index===items.length-1;actions.append(down);
+     const del=button('Delete',()=>deleteItem(item),'danger');actions.append(del);
+     body.append(actions);row.append(body);host.append(row);
+   });
+ }
+ function button(text,fn,extra=''){const b=document.createElement('button');b.textContent=text;if(extra)b.className=extra;b.type='button';b.addEventListener('click',fn);return b}
+ function resetForm(){ $('art-form').reset();$('item-id').value='';$('form-title').textContent='Add artwork';$('save-draft').textContent='Save as draft';$('art-file').required=false; }
+ function editItem(item){$('item-id').value=item.id;$('art-title').value=item.title;$('art-caption').value=item.caption||'';$('art-category').value=item.category||'play';$('form-title').textContent='Edit artwork';$('save-draft').textContent='Save changes';$('art-file').required=false;window.scrollTo({top:$('art-form').getBoundingClientRect().top+window.scrollY-30,behavior:'smooth'})}
+ $('cancel-edit').addEventListener('click',resetForm);
+ $('art-form').addEventListener('submit',async e=>{
+   e.preventDefault();const btn=$('save-draft');btn.disabled=true;
+   try{
+     const id=$('item-id').value||crypto.randomUUID();const file=$('art-file').files[0];let path=items.find(x=>x.id===id)?.image_path||null;let type=items.find(x=>x.id===id)?.media_type||'image';
+     if(file){if(file.size>25*1024*1024)throw new Error('File must be smaller than 25 MB.');type=file.type==='video/mp4'?'video':file.type==='image/gif'?'gif':'image';path=id+'/'+Date.now()+'-'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');const {error}=await client.storage.from('portfolio-artwork').upload(path,file,{upsert:false,contentType:file.type});if(error)throw error}
+     if(!path)throw new Error('Please choose an artwork file.');
+     const existing=items.find(x=>x.id===id);const record={id,title:$('art-title').value.trim(),caption:$('art-caption').value.trim(),category:$('art-category').value,image_path:path,media_type:type,published:existing?existing.published:false,position:existing?existing.position:items.length};
+     const {error}=await client.from('gallery_items').upsert(record);if(error)throw error;
+     message(adminStatus,existing?'Artwork updated.':'Artwork saved as a draft.','good');resetForm();await loadItems();
+   }catch(err){message(adminStatus,err.message||'Could not save artwork.','error')}finally{btn.disabled=false}
+ });
+ async function togglePublish(item){const next=!item.published;const {error}=await client.from('gallery_items').update({published:next}).eq('id',item.id);if(error){message(adminStatus,error.message,'error');return}await loadItems()}
+ async function move(index,delta){const target=index+delta;if(target<0||target>=items.length)return;const copy=[...items];[copy[index],copy[target]]=[copy[target],copy[index]];message(adminStatus,'Saving new gallery order…');const results=await Promise.all(copy.map((x,i)=>client.from('gallery_items').update({position:i}).eq('id',x.id)));const failed=results.find(x=>x.error);if(failed){message(adminStatus,failed.error.message,'error');return}await loadItems()}
+ async function deleteItem(item){if(!confirm('Delete “'+item.title+'” permanently?'))return;const {error}=await client.from('gallery_items').delete().eq('id',item.id);if(error){message(adminStatus,error.message,'error');return}await client.storage.from('portfolio-artwork').remove([item.image_path]);await loadItems()}
+ $('refresh').addEventListener('click',loadItems);
+ $('signout').addEventListener('click',async()=>{await client.auth.signOut();location.reload()});
+ $('login-form').addEventListener('submit',async e=>{e.preventDefault();const btn=$('login-button');btn.disabled=true;message(loginStatus,'Sending secure sign-in link…');const {error}=await client.auth.signInWithOtp({email:$('email').value.trim(),options:{emailRedirectTo:location.origin+location.pathname}});message(loginStatus,error?error.message:'Check your email for the sign-in link.',error?'error':'good');btn.disabled=false});
+ client.auth.getSession().then(({data})=>{if(data.session)checkAdmin(data.session)}).catch(err=>message(loginStatus,err.message,'error'));
+ client.auth.onAuthStateChange((event,session)=>{if(session&&['SIGNED_IN','TOKEN_REFRESHED'].includes(event))checkAdmin(session)});
+})();
+</script>
+</body></html>
