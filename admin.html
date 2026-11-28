@@ -89,8 +89,12 @@
      const existing=items.find(x=>x.id===editingId);
      if(editingId&&selected.length>1)throw new Error('When editing an item, choose only one replacement file.');
      if(!editingId&&!selected.length)throw new Error('Please choose one or more artwork files.');
-     if(editingId&&!selected.length)throw new Error('Choose a replacement file to update this artwork.');
      const category=$('art-category').value;
+     if(editingId&&!selected.length){
+       const {error}=await client.from('gallery_items').update({category}).eq('id',editingId);
+       if(error)throw error;
+       message(adminStatus,'Artwork updated.','good');resetForm();await loadItems();return;
+     }
      let saved=0;
      for(const file of selected){
        if(file.size>25*1024*1024)throw new Error(file.name+' is larger than 25 MB.');
