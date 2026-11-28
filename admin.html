@@ -23,7 +23,7 @@
 <div class="section-title"><h2 id="form-title">Add artwork</h2></div>
 <form id="art-form">
 <input id="item-id" type="hidden">
-<div class="field"><label for="art-file">Artwork file (image, GIF, or MP4)</label><input id="art-file" type="file" accept="image/jpeg,image/png,image/webp,image/avif,image/gif,video/mp4"></div>
+<div class="field"><label for="art-file">Artwork file (image, GIF, or MP4)</label><input id="art-file" type="file" multiple accept="image/jpeg,image/png,image/webp,image/avif,image/gif,video/mp4"></div>
 <div class="field"><label for="art-category">Gallery category</label><select id="art-category"><option value="web">Stickers</option><option value="design">Emotes</option><option value="play">Just for fun</option></select></div>
 <div class="row"><button class="primary" id="save-draft" type="submit">Save as draft</button><button type="button" id="cancel-edit">Cancel edit</button></div>
 </form></div>
@@ -83,13 +83,32 @@
  $('cancel-edit').addEventListener('click',resetForm);
  $('art-form').addEventListener('submit',async e=>{
    e.preventDefault();const btn=$('save-draft');btn.disabled=true;
+   const editingId=$('item-id').value;
+   const selected=Array.from($('art-file').files||[]);
    try{
-     const id=$('item-id').value||crypto.randomUUID();const file=$('art-file').files[0];let path=items.find(x=>x.id===id)?.image_path||null;let type=items.find(x=>x.id===id)?.media_type||'image';
-     if(file){if(file.size>25*1024*1024)throw new Error('File must be smaller than 25 MB.');type=file.type==='video/mp4'?'video':file.type==='image/gif'?'gif':'image';path=id+'/'+Date.now()+'-'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');const {error}=await client.storage.from('portfolio-artwork').upload(path,file,{upsert:false,contentType:file.type});if(error)throw error}
-     if(!path)throw new Error('Please choose an artwork file.');
-     const existing=items.find(x=>x.id===id);const filename=(file?.name||existing?.title||'Artwork').replace(/\\.[^.]+$/,'').slice(0,120);const record={id,title:existing?existing.title:filename||'Artwork',caption:existing?existing.caption||'':'',category:$('art-category').value,image_path:path,media_type:type,published:existing?existing.published:false,position:existing?existing.position:items.length};
-     const {error}=await client.from('gallery_items').upsert(record);if(error)throw error;
-     message(adminStatus,existing?'Artwork updated.':'Artwork saved as a draft.','good');resetForm();await loadItems();
+     const existing=items.find(x=>x.id===editingId);
+     if(editingId&&selected.length>1)throw new Error('When editing an item, choose only one replacement file.');
+     if(!editingId&&!selected.length)throw new Error('Please choose one or more artwork files.');
+     if(editingId&&!selected.length)throw new Error('Choose a replacement file to update this artwork.');
+     const category=$('art-category').value;
+     let saved=0;
+     for(const file of selected){
+       if(file.size>25*1024*1024)throw new Error(file.name+' is larger than 25 MB.');
+       const id=editingId||crypto.randomUUID();
+       const type=file.type==='video/mp4'?'video':file.type==='image/gif'?'gif':'image';
+       const path=id+'/'+Date.now()+'-'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+       message(adminStatus,'Uploading '+(saved+1)+' of '+selected.length+' · '+file.name);
+       const {error:uploadError}=await client.storage.from('portfolio-artwork').upload(path,file,{upsert:false,contentType:file.type});
+       if(uploadError)throw uploadError;
+       const title=file.name.replace(/\.[^.]+$/,'').slice(0,120)||'Artwork';
+       const record={id,title,caption:'',category,image_path:path,media_type:type,published:editingId?existing.published:false,position:editingId?existing.position:items.length+saved};
+       const {error:dbError}=await client.from('gallery_items').upsert(record);
+       if(dbError){await client.storage.from('portfolio-artwork').remove([path]);throw dbError}
+       if(editingId&&existing&&existing.image_path)await client.storage.from('portfolio-artwork').remove([existing.image_path]);
+       saved++;
+     }
+     message(adminStatus,editingId?'Artwork updated.':saved+' artwork item(s) saved as drafts.','good');
+     resetForm();await loadItems();
    }catch(err){message(adminStatus,err.message||'Could not save artwork.','error')}finally{btn.disabled=false}
  });
  async function togglePublish(item){const next=!item.published;const {error}=await client.from('gallery_items').update({published:next}).eq('id',item.id);if(error){message(adminStatus,error.message,'error');return}await loadItems()}
