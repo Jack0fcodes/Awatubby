@@ -174,7 +174,7 @@ header .brand-mark.is-hanging .brand-hanging{opacity:1!important;transform:trans
 <body>
 <div class="top-note">A little collection of things made with care ✿</div>
 <header><nav class="nav" aria-label="Main navigation">
-<a class="brand" href="#home"><span class="brand-mark"><img class="logo-normal" src="assets/logo/logo.gif" alt="" aria-hidden="true"><img class="brand-hanging" src="assets/logo/hanging-cat.gif" alt="" aria-hidden="true"></span> awatubby</a>
+<a class="brand" href="#home"><span class="brand-mark"><img class="logo-normal" src="assets/logo/logo.gif" data-site-asset="logo" alt="" aria-hidden="true"><img class="brand-hanging" src="assets/logo/hanging-cat.gif" data-site-asset="hanging_logo" alt="" aria-hidden="true"></span> awatubby</a>
 <div class="nav-links"><a href="#work">My work</a><a href="#about">About</a><a class="nav-cta" href="#contact">Social ↗</a></div>
 </nav></header>
 <main>
@@ -186,7 +186,7 @@ header .brand-mark.is-hanging .brand-hanging{opacity:1!important;transform:trans
 <div class="hero-art" aria-label="Playful plush-inspired decorative illustration">
 <div class="spark a">✦</div><div class="spark b">✿</div>
 <div class="float-tag tag-one">made with ♡</div><div class="float-tag tag-two">little ideas, lots of love</div>
-<img class="hero-gif" src="assets/hero/hero.gif" alt="Animated display box of colorful plush cats">
+<img class="hero-gif" src="assets/hero/hero.gif" data-site-asset="header_gif" alt="Animated display box of colorful plush cats">
 </div>
 </section>
 <section class="work" id="work"><div class="wrap">
@@ -210,7 +210,7 @@ header .brand-mark.is-hanging .brand-hanging{opacity:1!important;transform:trans
 </div>
 </div></section>
 <section class="about" id="about"><div class="wrap"><div class="about-box">
-<div class="about-sticker about-gif-frame"><img src="assets/about/about.gif" alt="Animated artwork in the About section"></div>
+<div class="about-sticker about-gif-frame"><img src="assets/about/about.gif" data-site-asset="about_gif" alt="Animated artwork in the About section"></div>
 <div class="about-copy"><span class="eyebrow"><i></i> A little about me</span><h2>Curious Mind.<br>Creative paws.</h2><p id="about-description">I enjoy making cute things, exploring new ideas, and adding a little personality to everything I create.</p><p>This portfolio is my growing collection, a place to share what I’m working on and what inspires me.</p></div>
 </div></div></section>
 <section class="contact" id="contact"><div class="wrap"><div class="contact-card social-card"><p class="social-label">Socials</p><div class="social-links" aria-label="Social media links">
@@ -262,6 +262,12 @@ if(brandMark&&hangingLogo){
   window.addEventListener('scroll',setLogoState,{passive:true});
   setLogoState();
 }
+
+// Load replaceable site images from the admin panel; keep local defaults if none are set.
+(async()=>{
+ const assetClient=window.supabase.createClient('https://ytwskhihsglneebiqnql.supabase.co','sb_publishable_2cFsK5dNf9WNBAuPxWpvfw_UuFRjQj-');
+ try{const {data,error}=await assetClient.from('site_assets').select('asset_key,image_path');if(error||!data)return;const urlFor=path=>assetClient.storage.from('portfolio-artwork').getPublicUrl(path).data.publicUrl;data.forEach(asset=>{const img=document.querySelector('[data-site-asset="'+asset.asset_key+'"]');if(img)img.src=urlFor(asset.image_path)})}catch(e){console.warn('Could not load site images:',e)}
+})();
 
 // Load published artwork from Supabase; keep the original sample gallery if no published items exist.
 (async()=>{
