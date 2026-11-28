@@ -43,8 +43,14 @@
 (() => {
  const SUPABASE_URL='https://ytwskhihsglneebiqnql.supabase.co';
  const SUPABASE_KEY='sb_publishable_2cFsK5dNf9WNBAuPxWpvfw_UuFRjQj-';
- const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
  const $=id=>document.getElementById(id);
+ function message(el,text,type=''){el.textContent=text;el.className='status'+(type?' '+type:'')}
+ if(!window.supabase||typeof window.supabase.createClient!=='function'){
+   message($('login-status'),'Studio could not load its sign-in service. Check your connection, then refresh this page.','error');
+   $('login-button').disabled=true;
+   return;
+ }
+ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
  $('login-form').addEventListener('submit',async event=>{event.preventDefault();const email=$('email').value.trim().toLowerCase();if(!email)return;const button=$('login-button');button.disabled=true;message($('login-status'),'Sending secure sign-in link…');try{const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:'https://jack0fcodes.github.io/Awatubby/admin.html'}});if(error)throw error;message($('login-status'),'Sign-in link sent. Open the newest email and tap the link once.','good')}catch(err){message($('login-status'),err.message||'Could not send sign-in link.','error')}finally{button.disabled=false}});
  const loginPanel=$('login-panel'),adminPanel=$('admin-panel'),loginStatus=$('login-status'),adminStatus=$('admin-status');
  let items=[],adminEmail='';
