@@ -4,7 +4,13 @@ The admin page is published at:
 
 https://jack0fcodes.github.io/Awatubby/admin.html
 
-## 1. Add the authorized email address
+## 1. Enable the Data API
+
+The frontend uses Supabase JS to query the database. In the Supabase dashboard, open **Integrations** (or **Data API**) and make sure the Data API is enabled for this project. The project was created with that option unchecked in the setup screen, so verify this before testing the site.
+
+Database access grants and Row Level Security policies are already configured for the gallery tables.
+
+## 2. Add the authorized email address
 
 In Supabase, open the **Awatabby_Portfolio** project → **SQL Editor** → **New query**. Run this SQL, replacing the example email with the email address your friend will use to sign in:
 
@@ -16,7 +22,7 @@ on conflict (email) do nothing;
 
 Add your own email as well if you want admin access. Only email addresses in this allowlist can manage artwork.
 
-## 2. Set the sign-in redirect
+## 3. Set the sign-in redirect
 
 In Supabase → **Authentication** → **URL Configuration**:
 
