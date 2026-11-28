@@ -27,7 +27,7 @@
 <div class="field"><label for="art-category">Category</label><select id="art-category"><option value="web">Stickers</option><option value="design">Emotes</option><option value="play">Just for fun</option></select></div>
 <div class="row"><button class="primary" id="save-draft" type="submit">Save drafts</button><button type="button" id="cancel-edit">Cancel</button></div>
 </form></div>
-<div class="panel"><div class="section-title"><h2>Artwork</h2><div class="view-switch"><button type="button" id="list-view" class="active" aria-pressed="true">List</button><button type="button" id="grid-view" aria-pressed="false">Grid</button><button id="refresh" class="small">Refresh</button></div></div><div id="items"><div class="empty">Loading artwork…</div></div></div>
+<div class="panel"><div class="section-title"><h2>Artwork</h2><div class="view-switch"><button type="button" id="list-view" aria-pressed="false">List</button><button type="button" id="grid-view" class="active" aria-pressed="true">Grid</button><button id="refresh" class="small">Refresh</button></div></div><div id="items"><div class="empty">Loading artwork…</div></div></div>
 </section>
 </div>
 <script>
@@ -59,7 +59,7 @@
    if(error){message(adminStatus,error.message,'error');return}
    items=data||[];renderItems();message(adminStatus,'Ready · '+items.length+' items','good');
  }
- let viewMode='list',dragIndex=null;
+ let viewMode='grid',dragIndex=null;
  function setView(mode){viewMode=mode;$('items').className=mode==='grid'?'items-grid':'';$('list-view').classList.toggle('active',mode==='list');$('grid-view').classList.toggle('active',mode==='grid');$('list-view').setAttribute('aria-pressed',String(mode==='list'));$('grid-view').setAttribute('aria-pressed',String(mode==='grid'));renderItems()}
  $('list-view').addEventListener('click',()=>setView('list'));
  $('grid-view').addEventListener('click',()=>setView('grid'));
@@ -77,8 +77,10 @@
      }
      row.append(mediaPreview(item));
      const body=document.createElement('div');
-     const state=document.createElement('span');state.className='pill';state.textContent=item.published?'Live':'Draft';body.append(state);
-     const cat=document.createElement('span');cat.className='pill';cat.textContent=({web:'Sticker',design:'Emote',play:'Fun'})[item.category]||item.category;body.append(cat);
+     if(viewMode==='list'){
+       const state=document.createElement('span');state.className='pill';state.textContent=item.published?'Live':'Draft';body.append(state);
+       const cat=document.createElement('span');cat.className='pill';cat.textContent=({web:'Sticker',design:'Emote',play:'Fun'})[item.category]||item.category;body.append(cat);
+     }
      const actions=document.createElement('div');actions.className='item-actions';
      const edit=button('Edit',()=>editItem(item));actions.append(edit);
      const toggle=button(item.published?'Hide':'Show',()=>togglePublish(item));actions.append(toggle);
