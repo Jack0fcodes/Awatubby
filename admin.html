@@ -210,10 +210,40 @@
  $('refresh').addEventListener('click',loadItems);
  $('signout').addEventListener('click',async()=>{await client.auth.signOut();location.reload()});
 
- let checkingUserId='',readyUserId='';
- async function handleSession(session){if(!session){loginPanel.hidden=false;adminPanel.hidden=true;checkingUserId='';readyUserId='';return}const userId=session.user&&session.user.id;if(!userId||userId===checkingUserId||userId===readyUserId)return;checkingUserId=userId;try{await checkAdmin(session);if(!adminPanel.hidden)readyUserId=userId}catch(err){message(loginStatus,err.message||'Could not open Studio. Please refresh and try again.','error')}finally{checkingUserId=''}}
- client.auth.onAuthStateChange((event,session)=>{if(session&&['INITIAL_SESSION','SIGNED_IN','TOKEN_REFRESHED'].includes(event)){setTimeout(()=>handleSession(session),0)}else if(event==='SIGNED_OUT'){handleSession(null)}});
- client.auth.getSession().then(({data,error})=>{if(error)throw error;if(data.session)handleSession(data.session)}).catch(err=>message(loginStatus,err.message||'Could not restore your Studio session.','error'));
+ let checkingUserId='',readyUserId='',sessionCheckStarted=false;
+ async function handleSession(session){
+   if(!session){loginPanel.hidden=false;adminPanel.hidden=true;checkingUserId='';readyUserId='';return}
+   const userId=session.user&&session.user.id;
+   if(!userId||userId===checkingUserId||userId===readyUserId)return;
+   checkingUserId=userId;sessionCheckStarted=true;
+   loginPanel.hidden=true;adminPanel.hidden=false;
+   message(adminStatus,'Checking Studio access…');
+   try{await checkAdmin(session);if(!adminPanel.hidden)readyUserId=userId}
+   catch(err){adminPanel.hidden=true;loginPanel.hidden=false;message(loginStatus,'Session received, but Studio could not finish loading: '+(err.message||'Please refresh.'),'error')}
+   finally{checkingUserId=''}
+ }
+ // Register first, then restore the session. The extra restore catches Safari
+ // returning from an email link after the initial auth event has already fired.
+ client.auth.onAuthStateChange((event,session)=>{
+   if(session&&['INITIAL_SESSION','SIGNED_IN','TOKEN_REFRESHED','USER_UPDATED'].includes(event)){
+     setTimeout(()=>handleSession(session),0);
+   }else if(event==='SIGNED_OUT'){handleSession(null)}
+ });
+ async function restoreStudioSession(){
+   try{
+     const {data,error}=await client.auth.getSession();if(error)throw error;
+     if(data.session)await handleSession(data.session);
+     else if(!sessionCheckStarted){
+       loginPanel.hidden=false;adminPanel.hidden=true;
+       if(location.hash.includes('access_token')||location.search.includes('code=')){
+         message(loginStatus,'Link opened, but Safari did not restore the sign-in session. Open the newest link in Safari, then refresh this page once.','error');
+       }
+     }
+   }catch(err){message(loginStatus,err.message||'Could not restore your Studio session.','error')}
+ }
+ restoreStudioSession();
+ window.addEventListener('pageshow',()=>{if(!readyUserId&&!checkingUserId)restoreStudioSession()});
+ window.addEventListener('focus',()=>{if(!readyUserId&&!checkingUserId)restoreStudioSession()});
 })();
 </script>
 </body></html>
