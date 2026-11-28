@@ -56,7 +56,7 @@
  }
  const siteAssetDefs=[{key:'logo',label:'Logo',note:'Header logo',fallback:'assets/logo/logo.gif'},{key:'hanging_logo',label:'Hanging logo',note:'Logo shown while scrolling',fallback:'assets/logo/hanging-cat.gif'},{key:'header_gif',label:'Header GIF',note:'Hero animation',fallback:'assets/hero/hero.gif'},{key:'about_gif',label:'About GIF',note:'About section image',fallback:'assets/about/about.gif'}];
  async function loadSiteAssets(){
-   const host=$('site-assets-list');host.replaceChildren();
+   const host=$('site-assets-list');host.replaceChildren();const grid=document.createDocumentFragment();
    const {data,error}=await client.from('site_assets').select('asset_key,image_path');
    if(error){const p=document.createElement('p');p.className='muted';p.textContent='Could not load site images: '+error.message;host.append(p);return}
    const saved=Object.fromEntries((data||[]).map(x=>[x.asset_key,x.image_path]));
@@ -78,8 +78,9 @@
          message(adminStatus,def.label+' updated.','good');await loadSiteAssets();
        }catch(err){message(adminStatus,err.message||'Could not update site image.','error')}finally{replace.disabled=false}
      });
-     controls.append(input,replace);body.append(name,controls);row.append(preview,body);host.append(row);
+     controls.append(input,replace);body.append(name,controls);row.append(preview,body);grid.append(row);
    });
+   host.replaceChildren(grid);
  }
  async function loadItems(){
    message(adminStatus,'Loading your gallery…');
