@@ -64,16 +64,15 @@
    if(!items.length){const e=document.createElement('div');e.className='empty';e.textContent='No artwork yet. Upload your first piece above!';host.append(e);return}
    items.forEach((item,index)=>{
      const row=document.createElement('article');row.className='item';row.append(mediaPreview(item));
-     const body=document.createElement('div');const title=document.createElement('h3');safeText(title,item.title);body.append(title);
-     const p=document.createElement('p');safeText(p,item.caption);body.append(p);
-     const state=document.createElement('span');state.className='pill';state.textContent=item.published?'Published':'Draft';body.append(state);
-     const cat=document.createElement('span');cat.className='pill';cat.textContent=({web:'Stickers',design:'Emotes',play:'Just for fun'})[item.category]||item.category;body.append(cat);
+     const body=document.createElement('div');
+     const state=document.createElement('span');state.className='pill';state.textContent=item.published?'Live':'Draft';body.append(state);
+     const cat=document.createElement('span');cat.className='pill';cat.textContent=({web:'Sticker',design:'Emote',play:'Fun'})[item.category]||item.category;body.append(cat);
      const actions=document.createElement('div');actions.className='item-actions';
      const edit=button('Edit',()=>editItem(item));actions.append(edit);
-     const toggle=button(item.published?'Unpublish':'Publish',()=>togglePublish(item));actions.append(toggle);
+     const toggle=button(item.published?'Hide':'Show',()=>togglePublish(item));actions.append(toggle);
      const up=button('↑',()=>move(index,-1));up.disabled=index===0;actions.append(up);
      const down=button('↓',()=>move(index,1));down.disabled=index===items.length-1;actions.append(down);
-     const del=button('Delete',()=>deleteItem(item),'danger');actions.append(del);
+     const del=button('Remove',()=>deleteItem(item),'danger');actions.append(del);
      body.append(actions);row.append(body);host.append(row);
    });
  }
