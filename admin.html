@@ -55,7 +55,7 @@
    if(error||!data){adminPanel.hidden=true;loginPanel.hidden=false;message(loginStatus,error?'Could not verify admin access.':'This email is not on the gallery admin list. Ask the site owner to add it.','error');await client.auth.signOut();return}
    adminEmail=email;message(adminStatus,'Signed in as '+email,'good');await Promise.all([loadItems(),loadSiteAssets()]);
  }
- const siteAssetDefs=[{key:'logo',label:'Logo',note:'Header logo'},{key:'hanging_logo',label:'Hanging logo',note:'Logo shown while scrolling'},{key:'header_gif',label:'Header GIF',note:'Hero animation'},{key:'about_gif',label:'About GIF',note:'About section image'}];
+ const siteAssetDefs=[{key:'logo',label:'Logo',note:'Header logo',fallback:'assets/logo/logo.gif'},{key:'hanging_logo',label:'Hanging logo',note:'Logo shown while scrolling',fallback:'assets/logo/hanging-cat.gif'},{key:'header_gif',label:'Header GIF',note:'Hero animation',fallback:'assets/hero/hero.gif'},{key:'about_gif',label:'About GIF',note:'About section image',fallback:'assets/about/about.gif'}];
  async function loadSiteAssets(){
    const host=$('site-assets-list');host.replaceChildren();
    const {data,error}=await client.from('site_assets').select('asset_key,image_path');
@@ -63,7 +63,7 @@
    const saved=Object.fromEntries((data||[]).map(x=>[x.asset_key,x.image_path]));
    siteAssetDefs.forEach(def=>{
      const row=document.createElement('div');row.className='site-asset-row';
-     const preview=document.createElement('img');preview.className='site-asset-preview';preview.alt='';if(saved[def.key])preview.src=urlFor(saved[def.key]);
+     const preview=document.createElement('img');preview.className='site-asset-preview';preview.alt='';preview.src=saved[def.key]?urlFor(saved[def.key]):def.fallback;
      const body=document.createElement('div');const name=document.createElement('div');name.className='site-asset-name';name.textContent=def.label;const note=document.createElement('div');note.className='site-asset-note';note.textContent=def.note;
      const controls=document.createElement('div');controls.className='site-asset-controls';const input=document.createElement('input');input.type='file';input.accept='image/gif,image/png,image/jpeg,image/webp,image/avif';
      const replace=button('Replace',async()=>{
