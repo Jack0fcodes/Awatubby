@@ -101,7 +101,7 @@
  async function deleteItem(item){if(!confirm('Delete “'+item.title+'” permanently?'))return;const {error}=await client.from('gallery_items').delete().eq('id',item.id);if(error){message(adminStatus,error.message,'error');return}await client.storage.from('portfolio-artwork').remove([item.image_path]);await loadItems()}
  $('refresh').addEventListener('click',loadItems);
  $('signout').addEventListener('click',async()=>{await client.auth.signOut();location.reload()});
- $('login-form').addEventListener('submit',async e=>{e.preventDefault();const btn=$('login-button');btn.disabled=true;message(loginStatus,'Sending secure sign-in link…');const {error}=await client.auth.signInWithOtp({email:$('email').value.trim(),options:{emailRedirectTo:location.origin+location.pathname}});message(loginStatus,error?error.message:'Check your email for the sign-in link.',error?'error':'good');btn.disabled=false});
+ $('login-form').addEventListener('submit',async e=>{e.preventDefault();const btn=$('login-button');btn.disabled=true;message(loginStatus,'Sending secure sign-in link…');const {error}=await client.auth.signInWithOtp({email:$('email').value.trim(),options:{emailRedirectTo:'https://jack0fcodes.github.io/Awatubby/admin.html'}});message(loginStatus,error?error.message:'Check your email for the sign-in link.',error?'error':'good');btn.disabled=false});
  client.auth.getSession().then(({data})=>{if(data.session)checkAdmin(data.session)}).catch(err=>message(loginStatus,err.message,'error'));
  client.auth.onAuthStateChange((event,session)=>{if(session&&['SIGNED_IN','TOKEN_REFRESHED'].includes(event))checkAdmin(session)});
 })();
